@@ -1,0 +1,11 @@
+[
+  {
+    "api": "ipfs/QmRYP5qwQd7AotVbtcx7KhN8HuHX9DCg8sS9LVE4kstpVw"
+  },
+  {
+    "query": "./schema.graphql",
+    "variables": {
+      "accountAddress": "0x0bc16455c366bced6297c9b8d50d26d6fa3bfbbc"
+    }
+  }
+]

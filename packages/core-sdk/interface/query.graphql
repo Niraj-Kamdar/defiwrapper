@@ -1,4 +1,4 @@
-#import { Protocol, Token } from "../types-interface/build/schema.graphql"
+#import { Protocol, Token, TokenBalance, AssetBalance, AccountBalance } from "../types-interface/build/schema.graphql"
 
 type Query {
   getProtocol(
@@ -74,13 +74,17 @@ type Query {
   #   underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
   # ): AssetBalance!
 
-  # getAccountBalance(
-  #   """
-  #   Returns the list of asset balance for all the assets given account has
-  #   """
+  getAccountBalance(
+    """
+    Returns the list of asset balance for all the assets given account has
+    """
+    accountAddress: String!
+    vsCurrencies: [String!]
+    noTruncate: Boolean  # returns the full recursive components tree (default: false)
+    underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
+  ): AccountBalance!
+
+  # getAccountTokenBalances(
   #   accountAddress: String!
-  #   vsCurrencies: [String!]
-  #   noTruncate: Boolean  # returns the full recursive components tree (default: false)
-  #   underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
-  # ): AccountBalance!
+  # ): [TokenBalance!]!
 }

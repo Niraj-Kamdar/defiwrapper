@@ -1,0 +1,13 @@
+#import { AccountBalance } from "../../../core-sdk/types-interface/build/schema.graphql"
+
+type Query {
+  getAccountBalance(
+    """
+    Returns the list of asset balance for all the assets given account has
+    """
+    accountAddress: String!
+    vsCurrencies: [String!]
+    noTruncate: Boolean  # returns the full recursive components tree (default: false)
+    underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
+  ): AccountBalance!
+}

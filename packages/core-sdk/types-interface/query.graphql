@@ -15,30 +15,23 @@ type Protocol {
   forkedFrom: Protocol
 }
 
-type TokenValue {
-  currency: String!
-  price: String! # BigDecimal
-  value: String! # BigDecimal (price * balance)
-}
-
-type TokenBalance {
-  token: Token!
-  balance: String! # BigDecimal
-  values: [TokenValue!]!
-}
-
-type AssetBalance {
-  tokenComponentBalance: TokenComponentBalance!
-  apy: String
-  apr: String
-  isDebt: Boolean!
-  claimableTokens: [TokenBalance!]!
-}
-
 type AccountBalance {
   account: String!
   network: String!
-  balances: [AssetBalance!]!
+  protocols: [ProtocolBalance!]!
+}
+
+type ProtocolBalance {
+  protocol: Protocol!
+  assets: [AssetBalance!]!
+}
+
+type AssetBalance {
+  apr: String
+  apy: String
+  balance: TokenComponentBalance!
+  isDebt: Boolean!
+  claimableTokens: [TokenBalance!]!
 }
 
 type TokenComponent {
@@ -56,4 +49,16 @@ type TokenComponentBalance {
   token: TokenBalance!
   unresolvedComponents: Int!
   components: [TokenComponentBalance!]!
+}
+
+type TokenBalance {
+  token: Token!
+  balance: String! # BigDecimal
+  values: [TokenValue!]!
+}
+
+type TokenValue {
+  currency: String!
+  price: String! # BigDecimal
+  value: String! # BigDecimal (price * balance)
 }
