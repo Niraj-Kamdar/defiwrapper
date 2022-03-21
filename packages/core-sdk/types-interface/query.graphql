@@ -1,20 +1,3 @@
-type Token {
-  address: String!
-  name: String!
-  symbol: String!
-  decimals: Int!
-  totalSupply: BigInt!
-}
-
-type Protocol {
-  id: String!
-  organization: String!
-  name: String!
-  version: String!
-  adapterUri: String
-  forkedFrom: Protocol
-}
-
 type AccountBalance {
   account: String!
   network: String!
@@ -34,28 +17,6 @@ type AssetBalance {
   claimableTokens: [TokenBalance!]!
 }
 
-type ProtocolBalance {
-  protocol: Protocol!
-  assets: [AssetBalance!]!
-}
-
-type AccountBalance {
-  account: String!
-  network: String!
-  protocols: [ProtocolBalance!]!
-}
-
-type TokenComponent {
-  tokenAddress: String!
-  """
-  unresolvedComponenets: No. of components that could not be resolved
-  Note: Higher the number, higher the inaccuracy
-  """
-  unresolvedComponents: Int!
-  components: [TokenComponent!]!
-  rate: String! # BigDecimal
-}
-
 type TokenComponentBalance {
   token: TokenBalance!
   unresolvedComponents: Int!
@@ -72,4 +33,32 @@ type TokenValue {
   currency: String!
   price: String! # BigDecimal
   value: String! # BigDecimal (price * balance)
+}
+
+type TokenComponent {
+  tokenAddress: String!
+  """
+  unresolvedComponenets: No. of components that could not be resolved
+  Note: Higher the number, higher the inaccuracy
+  """
+  unresolvedComponents: Int!
+  components: [TokenComponent!]!
+  rate: String! # BigDecimal
+}
+
+type Token {
+  address: String!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+}
+
+type Protocol {
+  id: String!
+  organization: String!
+  name: String!
+  version: String!
+  adapterUri: String
+  forkedFrom: Protocol
 }
