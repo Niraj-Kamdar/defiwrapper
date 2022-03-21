@@ -34,6 +34,17 @@ type AssetBalance {
   claimableTokens: [TokenBalance!]!
 }
 
+type ProtocolBalance {
+  protocol: Protocol!
+  assets: [AssetBalance!]!
+}
+
+type AccountBalance {
+  account: String!
+  network: String!
+  protocols: [ProtocolBalance!]!
+}
+
 type TokenComponent {
   tokenAddress: String!
   """
