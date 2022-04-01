@@ -12,11 +12,11 @@ type Query {
   ): AccountBalance!
 
   # Covalent Account resolver doesn't support multiple currencies in single query
-  # getTransactions(
-  #   accountAddress: String!
-  #   vsCurrency: String!  # This will be moved to env of account-resolver
-  #   options: Options
-  # ): TransactionsList!
+  getTransactions(
+    accountAddress: String!
+    vsCurrency: String!  # This will be moved to env of account-resolver
+    options: Options
+  ): TransactionsList!
 
   getTokenTransfers(
     accountAddress: String!
@@ -113,7 +113,7 @@ type BlockRangeOptions {
 }
 
 type Pagination {
-  total: Int!
+  total: Int
   perPage: Int!
   page: Int!
   hasMore: Boolean!
@@ -133,8 +133,8 @@ type Transaction {
   to: String!
   value: String!  # BigDecimal
   quote: String!  # BigDecimal
-  quoteRate: String!  # BigDecimal
   gasInfo: GasInfo!
+  logs: [EventLog!]!
   timestamp: String!  # Timestamp of the transaction
   blockHeight: Int!  # Block height of the transaction
   offset: Int!
@@ -178,4 +178,26 @@ type TransfersList {
   pagination: Pagination!
   updatedAt: String!
   nextUpdateAt: String!
+}
+
+type EventLog {
+  contractAddress: String!
+  logOffset: Int!
+  topics: [String!]!
+  data: String!
+  event: Event
+}
+
+type Event {
+  name: String!
+  signature: String!
+  params: [EventParam!]!
+}
+
+type EventParam {
+  name: String!
+  type: String!
+  indexed: Boolean!
+  decoded: Boolean!
+  value: String!
 }
