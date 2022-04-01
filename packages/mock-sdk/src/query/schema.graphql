@@ -1,4 +1,4 @@
-#import { AccountBalance } from "../../../core-sdk/types-interface/build/schema.graphql"
+#import { Query, Connection } into Ethereum from "ens/ethereum.web3api.eth"
 
 type Query {
   getAccountBalance(
@@ -10,4 +10,172 @@ type Query {
     noTruncate: Boolean  # returns the full recursive components tree (default: false)
     underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
   ): AccountBalance!
+
+  # Covalent Account resolver doesn't support multiple currencies in single query
+  # getTransactions(
+  #   accountAddress: String!
+  #   vsCurrency: String!  # This will be moved to env of account-resolver
+  #   options: Options
+  # ): TransactionsList!
+
+  getTokenTransfers(
+    accountAddress: String!
+    tokenAddress: String!
+    vsCurrency: String!  # This will be moved to env of account-resolver
+    options: Options
+  ): TransfersList!
+}
+
+type Env {
+  connection: Ethereum_Connection!
+}
+
+type AccountBalance {
+  account: String!
+  network: String!
+  values: [TokenValue!]! 
+  protocols: [ProtocolBalance!]!
+}
+
+type ProtocolBalance {
+  protocol: Protocol!
+  values: [TokenValue!]! 
+  assets: [AssetBalance!]!
+}
+
+type AssetBalance {
+  apr: String
+  apy: String
+  balance: TokenComponentBalance!
+  isDebt: Boolean!
+  claimableTokens: [TokenBalance!]!
+}
+
+type TokenComponentBalance {
+  token: TokenBalance!
+  unresolvedComponents: Int!
+  components: [TokenComponentBalance!]!
+}
+
+type TokenBalance {
+  token: Token!
+  balance: String! # BigDecimal
+  values: [TokenValue!]!
+}
+
+type TokenValue {
+  currency: String!
+  price: String! # BigDecimal
+  value: String! # BigDecimal (price * balance)
+}
+
+type TokenComponent {
+  tokenAddress: String!
+  """
+  unresolvedComponenets: No. of components that could not be resolved
+  Note: Higher the number, higher the inaccuracy
+  """
+  unresolvedComponents: Int!
+  components: [TokenComponent!]!
+  rate: String! # BigDecimal
+}
+
+type Token {
+  address: String!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+}
+
+type Protocol {
+  id: String!
+  organization: String!
+  name: String!
+  version: String!
+  adapterUri: String
+  forkedFrom: Protocol
+}
+
+type Options {
+  pagination: PaginationOptions
+  blockRange: BlockRangeOptions
+}
+
+type PaginationOptions {
+  page: Int!
+  perPage: Int!
+}
+
+type BlockRangeOptions {
+  startBlock: Int  # default: 0
+  endBlock: Int  # default: latest
+}
+
+type Pagination {
+  total: Int!
+  perPage: Int!
+  page: Int!
+  hasMore: Boolean!
+}
+
+type GasInfo {
+  offered: String!  # Gas offered for the transaction
+  spent: String!  # Gas spent for the transaction
+  price: String!  # Gas price in wei (BigDecimal)
+  quoteRate: String!  # rate of native currency in quoted currency (BigDecimal)
+  quote: String!  # Gas price in quote currency (BigDecimal)
+}
+
+type Transaction {
+  hash: String!
+  from: String!
+  to: String!
+  value: String!  # BigDecimal
+  quote: String!  # BigDecimal
+  quoteRate: String!  # BigDecimal
+  gasInfo: GasInfo!
+  timestamp: String!  # Timestamp of the transaction
+  blockHeight: Int!  # Block height of the transaction
+  offset: Int!
+}
+
+type TransactionsList {
+  account: String!
+  network: String!
+  quoteCurrency: String!
+  transactions: [Transaction!]!
+  pagination: Pagination!
+  updatedAt: String!
+  nextUpdateAt: String!
+}
+
+enum TransferType {
+  IN,
+  OUT,
+}
+
+type Transfer {
+  from: String!
+  to: String!
+  type: TransferType!
+  value: String!  # BigDecimal
+  quoteRate: String!  # rate of token in quote currency (BigDecimal)
+  quote: String!  # BigDecimal
+}
+
+type TransfersPerTx {
+  transaction: Transaction!
+  transfers: [Transfer!]!
+}
+
+type TransfersList {
+  account: String!
+  network: String!
+  quoteCurrency: String!
+  token: Token!
+  transfers: [TransfersPerTx!]!
+  pagination: Pagination!
+  updatedAt: String!
+  nextUpdateAt: String!
 }

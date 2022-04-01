@@ -1,11 +1,40 @@
 import { BigInt } from "@web3api/wasm-as";
 
-import { AccountBalance, Input_getAccountBalance } from "./w3";
+import {
+  AccountBalance,
+  env,
+  Ethereum_Connection,
+  Ethereum_Network,
+  Ethereum_Query,
+  Input_getAccountBalance,
+  Input_getTokenTransfers,
+  QueryEnv,
+  // TransactionsList,
+  TransfersList,
+  TransferType,
+  // Input_getTransactions,
+  // TransactionsList,
+} from "./w3";
+
+function getNetworkName(connection: Ethereum_Connection): string {
+  const network: Ethereum_Network = Ethereum_Query.getNetwork({ connection: connection }).unwrap();
+  return network.name;
+}
 
 export function getAccountBalance(input: Input_getAccountBalance): AccountBalance {
+  if (!env) throw new Error("env is not set");
+  const connection = (env as QueryEnv).connection;
+
   return {
     account: input.accountAddress,
-    network: "Ethereum",
+    network: getNetworkName(connection),
+    values: [
+      {
+        currency: "usd",
+        price: "N/A",
+        value: "10,765.135113993",
+      },
+    ],
     protocols: [
       {
         protocol: {
@@ -16,6 +45,13 @@ export function getAccountBalance(input: Input_getAccountBalance): AccountBalanc
           version: "2",
           forkedFrom: null,
         },
+        values: [
+          {
+            currency: "usd",
+            price: "N/A",
+            value: "10,720.855113993",
+          },
+        ],
         assets: [
           {
             apy: "8.67",
@@ -98,6 +134,13 @@ export function getAccountBalance(input: Input_getAccountBalance): AccountBalanc
           version: "1",
           forkedFrom: null,
         },
+        values: [
+          {
+            currency: "usd",
+            price: "N/A",
+            value: "44.28",
+          },
+        ],
         assets: [
           {
             apy: null,
@@ -151,5 +194,100 @@ export function getAccountBalance(input: Input_getAccountBalance): AccountBalanc
         ],
       },
     ],
+  };
+}
+
+// export function getTransactions(input: Input_getTransactions): TransactionsList {
+//   if (!env) throw new Error("env is not set");
+//   const connection = env.connection as Ethereum_Connection;
+
+//   return {};
+// }
+
+export function getTokenTransfers(input: Input_getTokenTransfers): TransfersList {
+  if (!env) throw new Error("env is not set");
+  const connection = (env as QueryEnv).connection;
+
+  return {
+    account: input.accountAddress,
+    updatedAt: "2022-04-01T04:06:53.745976993Z",
+    nextUpdateAt: "2022-04-01T04:11:53.745977273Z",
+    quoteCurrency: "usd",
+    network: getNetworkName(connection),
+    token: {
+      name: "USD Coin",
+      symbol: "USDC",
+      address: input.tokenAddress,
+      decimals: 6,
+      totalSupply: BigInt.fromString("1000000000000"),
+    },
+    transfers: [
+      {
+        transaction: {
+          timestamp: "2022-02-20T16:36:43Z",
+          blockHeight: 14244015,
+          hash: "0x38aa0a4f1ee26b776820a63559d3d5f339b4d2330abb4154ddcf087325d85207",
+          offset: 55,
+          to: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          value: "0",
+          m_from: "0xec4486a90371c9b66f499ff3936f29f0d5af8b7e",
+          quote: "0.0",
+          quoteRate: "0",
+          gasInfo: {
+            offered: "90000",
+            spent: "48525",
+            price: "46567282379",
+            quote: "6.210092151066492",
+            quoteRate: "2748.220703125",
+          },
+        },
+        transfers: [
+          {
+            m_from: "0xec4486a90371c9b66f499ff3936f29f0d5af8b7e",
+            to: "0x197e3eccd00f07b18205753c638c3e59013a92bf",
+            m_type: TransferType.IN,
+            value: "40000000000",
+            quoteRate: "1.0454195737838745",
+            quote: "41816.78295135498",
+          },
+        ],
+      },
+      {
+        transaction: {
+          timestamp: "2022-02-11T09:36:58Z",
+          blockHeight: 14183956,
+          hash: "0x0ff3a362c2f641b202038b9590ec2d2d6f9befab30c4ffb6058531af5e6b5030",
+          offset: 30,
+          m_from: "0xf3890b63a66dbcac1df580997d317990507e1cd3",
+          to: "0xd152f549545093347a162dce210e7293f1452150",
+          value: "0",
+          quote: "0.0",
+          quoteRate: "0",
+          gasInfo: {
+            offered: "522717",
+            spent: "502722",
+            price: "46835110783",
+            quote: "70.98184770396895",
+            quoteRate: "3014.72607421875",
+          },
+        },
+        transfers: [
+          {
+            m_from: "0xd152f549545093347a162dce210e7293f1452150",
+            to: "0x197e3eccd00f07b18205753c638c3e59013a92bf",
+            m_type: TransferType.IN,
+            value: "40000000000",
+            quoteRate: "1.0454195737838745",
+            quote: "41816.78295135498",
+          },
+        ],
+      },
+    ],
+    pagination: {
+      hasMore: true,
+      page: 1,
+      perPage: 2,
+      total: 14,
+    },
   };
 }
