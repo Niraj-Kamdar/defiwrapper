@@ -4,7 +4,7 @@ export function getClientConfig(
   defaultConfigs: Partial<Web3ApiClientConfig>,
 ): Partial<Web3ApiClientConfig> {
   const env = {
-    uri: "w3://ipfs/QmWNW25E3M23Uf4ftePoKopuoVtcUSz4DHKFqKfbsz7XBP",
+    uri: "w3://ens/rinkeby/mock.defiwrapper.eth",
     common: {
       connection: {
         node: null,

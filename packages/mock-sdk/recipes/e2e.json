@@ -1,6 +1,6 @@
 [
   {
-    "api": "ipfs/QmWNW25E3M23Uf4ftePoKopuoVtcUSz4DHKFqKfbsz7XBP"
+    "api": "w3://ens/rinkeby/mock.defiwrapper.eth"
   },
   {
     "query": "./getAccountBalance.graphql",
