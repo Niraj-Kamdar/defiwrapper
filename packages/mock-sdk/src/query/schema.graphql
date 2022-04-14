@@ -1,6 +1,7 @@
 #import { Query, Connection } into Ethereum from "ens/ethereum.web3api.eth"
+#import { Query } into Covalent from "ens/rinkeby/covalent.account.resolvers.defiwrapper.eth"
 
-type Query {
+type Query implements Covalent_Query {
   getAccountBalance(
     """
     Returns the list of asset balance for all the assets given account has
@@ -10,20 +11,6 @@ type Query {
     noTruncate: Boolean  # returns the full recursive components tree (default: false)
     underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
   ): AccountBalance!
-
-  # Covalent Account resolver doesn't support multiple currencies in single query
-  getTransactions(
-    accountAddress: String!
-    vsCurrency: String!  # This will be moved to env of account-resolver
-    options: Options
-  ): TransactionsList!
-
-  getTokenTransfers(
-    accountAddress: String!
-    tokenAddress: String!
-    vsCurrency: String!  # This will be moved to env of account-resolver
-    options: Options
-  ): TransfersList!
 }
 
 type Env {
@@ -32,7 +19,7 @@ type Env {
 
 type AccountBalance {
   account: String!
-  network: String!
+  chainId: String!
   values: [TokenValue!]! 
   protocols: [ProtocolBalance!]!
 }
@@ -95,109 +82,4 @@ type Protocol {
   version: String!
   adapterUri: String
   forkedFrom: Protocol
-}
-
-type Options {
-  pagination: PaginationOptions
-  blockRange: BlockRangeOptions
-}
-
-type PaginationOptions {
-  page: Int!
-  perPage: Int!
-}
-
-type BlockRangeOptions {
-  startBlock: Int  # default: 0
-  endBlock: Int  # default: latest
-}
-
-type Pagination {
-  total: Int
-  perPage: Int!
-  page: Int!
-  hasMore: Boolean!
-}
-
-type GasInfo {
-  offered: String!  # Gas offered for the transaction
-  spent: String!  # Gas spent for the transaction
-  price: String!  # Gas price in wei (BigDecimal)
-  quoteRate: String!  # rate of native currency in quoted currency (BigDecimal)
-  quote: String!  # Gas price in quote currency (BigDecimal)
-}
-
-type Transaction {
-  hash: String!
-  from: String!
-  to: String!
-  value: String!  # BigDecimal
-  quote: String!  # BigDecimal
-  gasInfo: GasInfo!
-  logs: [EventLog!]!
-  timestamp: String!  # Timestamp of the transaction
-  blockHeight: Int!  # Block height of the transaction
-  offset: Int!
-}
-
-type TransactionsList {
-  account: String!
-  network: String!
-  quoteCurrency: String!
-  transactions: [Transaction!]!
-  pagination: Pagination!
-  updatedAt: String!
-  nextUpdateAt: String!
-}
-
-enum TransferType {
-  IN,
-  OUT,
-}
-
-type Transfer {
-  from: String!
-  to: String!
-  type: TransferType!
-  value: String!  # BigDecimal
-  quoteRate: String!  # rate of token in quote currency (BigDecimal)
-  quote: String!  # BigDecimal
-}
-
-type TransfersPerTx {
-  transaction: Transaction!
-  transfers: [Transfer!]!
-}
-
-type TransfersList {
-  account: String!
-  network: String!
-  quoteCurrency: String!
-  token: Token!
-  transfers: [TransfersPerTx!]!
-  pagination: Pagination!
-  updatedAt: String!
-  nextUpdateAt: String!
-}
-
-type EventLog {
-  contractAddress: String!
-  logOffset: Int!
-  topics: [String!]!
-  data: String!
-  event: Event
-}
-
-type Event {
-  name: String!
-  signature: String!
-  params: [EventParam!]!
-}
-
-type EventParam {
-  name: String!
-  type: String!
-  indexed: Boolean!
-  decoded: Boolean!
-  value: String!
 }
