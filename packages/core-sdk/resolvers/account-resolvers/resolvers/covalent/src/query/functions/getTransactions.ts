@@ -10,6 +10,7 @@ import {
   parseJsonTxns,
 } from "../utils";
 import {
+  AccountResolver_Options,
   AccountResolver_TransactionsList,
   env,
   Http_Query,
@@ -24,7 +25,14 @@ export function getTransactions(input: Input_getTransactions): AccountResolver_T
 
   const chainId = (env as QueryEnv).chainId.toString();
   const apiKey = (env as QueryEnv).apiKey;
-  const url = buildUrl([COVALENT_API, "v1", chainId, "address", input.address, "transactions_v2"]);
+  const url = buildUrl([
+    COVALENT_API,
+    "v1",
+    chainId,
+    "address",
+    input.accountAddress,
+    "transactions_v2",
+  ]);
 
   const params: Http_UrlParam[] = [
     {
@@ -37,34 +45,37 @@ export function getTransactions(input: Input_getTransactions): AccountResolver_T
     },
   ];
 
-  const paginationOptions = input.options.pagination;
-  if (paginationOptions) {
-    params.push({
-      key: "page-number",
-      value: paginationOptions.page.toString(),
-    });
-    params.push({
-      key: "page-size",
-      value: paginationOptions.perPage.toString(),
-    });
-  }
+  if (input.options) {
+    const options = input.options as AccountResolver_Options;
+    const paginationOptions = options.pagination;
+    if (paginationOptions) {
+      params.push({
+        key: "page-number",
+        value: paginationOptions.page.toString(),
+      });
+      params.push({
+        key: "page-size",
+        value: paginationOptions.perPage.toString(),
+      });
+    }
 
-  const blockRangeOptions = input.options.blockRange;
-  if (blockRangeOptions) {
-    const startBlockOption = blockRangeOptions.startBlock.isNull
-      ? blockRangeOptions.startBlock.value.toString()
-      : "0";
-    const endBlockOption = blockRangeOptions.endBlock.isNull
-      ? blockRangeOptions.endBlock.value.toString()
-      : "latest";
-    params.push({
-      key: "starting-block",
-      value: startBlockOption,
-    });
-    params.push({
-      key: "ending-block",
-      value: endBlockOption,
-    });
+    const blockRangeOptions = options.blockRange;
+    if (blockRangeOptions) {
+      const startBlockOption: string = blockRangeOptions.startBlock.isNull
+        ? blockRangeOptions.startBlock.value.toString()
+        : "0";
+      const endBlockOption: string = blockRangeOptions.endBlock.isNull
+        ? blockRangeOptions.endBlock.value.toString()
+        : "latest";
+      params.push({
+        key: "starting-block",
+        value: startBlockOption,
+      });
+      params.push({
+        key: "ending-block",
+        value: endBlockOption,
+      });
+    }
   }
 
   const res = Http_Query.get({
