@@ -13,10 +13,6 @@ type Query implements Covalent_Query {
   ): AccountBalance!
 }
 
-type Env {
-  connection: Ethereum_Connection!
-}
-
 type AccountBalance {
   account: String!
   chainId: String!
