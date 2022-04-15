@@ -81,8 +81,8 @@ type Query {
     """
     accountAddress: String!
     vsCurrencies: [String!]
-    noTruncate: Boolean  # returns the full recursive components tree (default: false)
-    underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
+    noTruncate: Boolean # returns the full recursive components tree (default: false)
+    underlyingPrice: Boolean # If specified returns price of underlying token componenets in the given currencies.
   ): AccountBalance!
 
   # getAccountTokenBalances(

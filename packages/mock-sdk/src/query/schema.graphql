@@ -8,8 +8,8 @@ type Query implements Covalent_Query {
     """
     accountAddress: String!
     vsCurrencies: [String!]
-    noTruncate: Boolean  # returns the full recursive components tree (default: false)
-    underlyingPrice: Boolean  # If specified returns price of underlying token componenets in the given currencies.
+    noTruncate: Boolean # returns the full recursive components tree (default: false)
+    underlyingPrice: Boolean # If specified returns price of underlying token componenets in the given currencies.
   ): AccountBalance!
 }
 
@@ -20,13 +20,13 @@ type Env {
 type AccountBalance {
   account: String!
   chainId: String!
-  values: [TokenValue!]! 
+  values: [TokenValue!]!
   protocols: [ProtocolBalance!]!
 }
 
 type ProtocolBalance {
   protocol: Protocol!
-  values: [TokenValue!]! 
+  values: [TokenValue!]!
   assets: [AssetBalance!]!
 }
 
