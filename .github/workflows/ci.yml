@@ -47,10 +47,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Lint
         run: yarn lint
-
       - name: Styling format check
         run: yarn format:check
   Coingecko:
@@ -63,10 +61,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Build
         run: lerna run build --scope @defiwrapper/coingecko
-
       - name: Test
         run: lerna run test --scope @defiwrapper/coingecko
   TokenResolvers:
@@ -79,89 +75,87 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Build
         run: lerna run build --scope @defiwrapper/token-resolvers
-
       - name: Test
         run: lerna run test --scope @defiwrapper/token-resolvers
-  # AccountResolvers:
-  #   name: AccountResolvers
-  #   needs:
-  #     - Base
-  #     - TokenResolvers
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/account-resolvers
-
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/account-resolvers
-  # PriceResolvers:
-  #   name: PriceResolvers
-  #   needs:
-  #     - Base
-  #     - TokenResolvers
-  #     - Coingecko
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/price-resolvers
-
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/price-resolvers
-  # ProtocolResolvers:
-  #   name: ProtocolResolvers
-  #   needs:
-  #     - Base
-  #     - TokenResolvers
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/protocol-resolvers
-
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/protocol-resolvers
-  # AssetResolvers:
-  #   name: AssetResolvers
-  #   needs:
-  #     - Base
-  #     - TokenResolvers
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/asset-resolvers
-
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/asset-resolvers 
-  # CoreSDK:
-  #   name: CoreSDK
-  #   needs:
-  #     - Base
-  #     - TokenResolvers
-  #     - PriceResolvers
-  #     - AssetResolvers
-  #     - ProtocolResolvers
-  #     - AcountResolvers
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/core-sdk-interface && lerna run build --scope @defiwrapper/core-sdk
-
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/core-sdk
+  AccountResolvers:
+    needs:
+      - Base
+      - TokenResolvers
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build
+        run: lerna run build --scope @defiwrapper/account-resolvers
+      - name: Test
+        run: lerna run test --scope @defiwrapper/account-resolvers
+  PriceResolvers:
+    needs:
+      - Base
+      - TokenResolvers
+      - Coingecko
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build
+        run: lerna run build --scope @defiwrapper/price-resolvers
+      - name: Test
+        run: lerna run test --scope @defiwrapper/price-resolvers
+  ProtocolResolvers:
+    needs:
+      - Base
+      - TokenResolvers
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build
+        run: lerna run build --scope @defiwrapper/protocol-resolvers
+      - name: Test
+        run: lerna run test --scope @defiwrapper/protocol-resolvers
+  AssetResolvers:
+    needs:
+      - Base
+      - TokenResolvers
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build
+        run: lerna run build --scope @defiwrapper/asset-resolvers
+      - name: Test
+        run: lerna run test --scope @defiwrapper/asset-resolvers
+  CoreSDK:
+    needs:
+      - Base
+      - TokenResolvers
+      - PriceResolvers
+      - AssetResolvers
+      - ProtocolResolvers
+      - AcountResolvers
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build
+        run: lerna run build --scope @defiwrapper/core-sdk-interface && lerna run build --scope @defiwrapper/core-sdk
+      - name: Test
+        run: lerna run test --scope @defiwrapper/core-sdk
