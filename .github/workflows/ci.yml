@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - uses: ./.github/workflows/base.yml
+      - uses: ./.github/workflows/base
       - name: Lint
         run: yarn lint
       - name: Styling format check
@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - uses: ./.github/workflows/base.yml
+      - uses: ./.github/workflows/base
       - name: Build
         run: lerna run build --scope @defiwrapper/coingecko
       - uses: actions/upload-artifact@v3
