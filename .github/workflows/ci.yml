@@ -7,7 +7,6 @@ on:
 
 jobs:
   Base:
-    name: Base
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -28,8 +27,30 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --nonInteractive --frozen-lockfile --prefer-offline
+  Lint:
+    needs:
+      - Base
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Lint
+        run: yarn lint
+
+      - name: Styling format check
+        run: yarn format:check
   Coingecko:
-    name: Coingecko
     needs:
       - Base
     runs-on: ubuntu-latest
@@ -42,20 +63,19 @@ jobs:
 
       - name: Test
         run: lerna run test --scope @defiwrapper/coingecko
-  # TokenResolvers:
-  #   name: TokenResolvers
-  #   needs:
-  #     - Base
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 60
-  #   env:
-  #     CI: false
-  #   steps:
-  #     - name: Build
-  #       run: lerna run build --scope @defiwrapper/token-resolvers
+  TokenResolvers:
+    needs:
+      - Base
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: false
+    steps:
+      - name: Build
+        run: lerna run build --scope @defiwrapper/token-resolvers
 
-  #     - name: Test
-  #       run: lerna run test --scope @defiwrapper/token-resolvers
+      - name: Test
+        run: lerna run test --scope @defiwrapper/token-resolvers
   # AccountResolvers:
   #   name: AccountResolvers
   #   needs:
