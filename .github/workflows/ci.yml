@@ -45,6 +45,9 @@ jobs:
     env:
       CI: false
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Lint
         run: yarn lint
 
@@ -58,6 +61,9 @@ jobs:
     env:
       CI: false
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Build
         run: lerna run build --scope @defiwrapper/coingecko
 
@@ -71,6 +77,9 @@ jobs:
     env:
       CI: false
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Build
         run: lerna run build --scope @defiwrapper/token-resolvers
 
